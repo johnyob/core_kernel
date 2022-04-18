@@ -4,25 +4,25 @@
 open! Import
 
 (*_
-  (***********************************************************************)
-  (*                                                                     *)
-  (*                           Objective Caml                            *)
-  (*                                                                     *)
-  (*             Damien Doligez, projet Para, INRIA Rocquencourt         *)
-  (*                                                                     *)
-  (*  Copyright 1996 Institut National de Recherche en Informatique et   *)
-  (*  en Automatique.  All rights reserved.  This file is distributed    *)
-  (*  under the terms of the GNU Library General Public License, with    *)
-  (*  the special exception on linking described in file ../LICENSE.     *)
-  (*                                                                     *)
-  (***********************************************************************)
+    (***********************************************************************)
+    (*                                                                     *)
+    (*                           Objective Caml                            *)
+    (*                                                                     *)
+    (*             Damien Doligez, projet Para, INRIA Rocquencourt         *)
+    (*                                                                     *)
+    (*  Copyright 1996 Institut National de Recherche en Informatique et   *)
+    (*  en Automatique.  All rights reserved.  This file is distributed    *)
+    (*  under the terms of the GNU Library General Public License, with    *)
+    (*  the special exception on linking described in file ../LICENSE.     *)
+    (*                                                                     *)
+    (***********************************************************************)
 
-  (* $Id: gc.mli,v 1.42 2005-10-25 18:34:07 doligez Exp $ *)
+    (* $Id: gc.mli,v 1.42 2005-10-25 18:34:07 doligez Exp $ *)
 *)
 module Stat : sig
-  [%%if ocaml_version >= (4, 12, 0)]
+    [%%if ocaml_version >= (4, 12, 0)]
 
-  type t =
+    type t =
     { minor_words : float
     (** Number of words allocated in the minor heap since
         the program was started.  This number is accurate in
@@ -61,11 +61,11 @@ module Stat : sig
     (** Number of forced full major collections completed since the program
         was started. @since v0.14.1 *)
     }
-  [@@deriving bin_io, sexp, fields]
+    [@@deriving bin_io, sexp, fields]
 
-  [%%else]
+    [%%else]
 
-  type t =
+    type t =
     { minor_words : float
     (** Number of words allocated in the minor heap since
         the program was started.  This number is accurate in
@@ -101,11 +101,11 @@ module Stat : sig
     ; top_heap_words : int (** Maximum size reached by the major heap, in words. *)
     ; stack_size : int (** Current size of the stack, in words. *)
     }
-  [@@deriving bin_io, sexp, fields]
+    [@@deriving bin_io, sexp, fields]
 
-  [%%endif]
+    [%%endif]
 
-  include Comparable.S with type t := t
+    include Comparable.S with type t := t
 end
 
 type stat = Stat.t
@@ -119,9 +119,9 @@ type stat = Stat.t
 *)
 
 module Control : sig
-  [%%if ocaml_version < (4, 08, 0)]
+    [%%if ocaml_version < (4, 08, 0)]
 
-  type t =
+    type t =
     { mutable minor_heap_size : int
     (** The size (in words) of the minor heap.  Changing this parameter will
         trigger a minor collection.
@@ -194,18 +194,18 @@ module Control : sig
 
         Default: 1. @since 4.03.0 *)
     }
-  [@@deriving bin_io, sexp, fields]
+    [@@deriving bin_io, sexp, fields]
 
-  [%%else]
+    [%%else]
 
-  type t =
-    { mutable minor_heap_size : int
+    type t =
+    {  minor_heap_size : int
     (** The size (in words) of the minor heap.  Changing this parameter will
         trigger a minor collection.
 
         Default: 262144 words / 1MB (32bit) / 2MB (64bit).
     *)
-    ; mutable major_heap_increment : int
+    ; major_heap_increment : int
     (** How much to add to the major heap when increasing it. If this
         number is less than or equal to 1000, it is a percentage of
         the current heap size (i.e. setting it to 100 will double the heap
@@ -214,7 +214,7 @@ module Control : sig
 
         Default: 15%.
     *)
-    ; mutable space_overhead : int
+    ; space_overhead : int
     (** The major GC speed is computed from this parameter.
         This is the memory that will be "wasted" because the GC does not
         immediately collect unreachable blocks.  It is expressed as a
@@ -223,7 +223,7 @@ module Control : sig
         blocks more eagerly) if [space_overhead] is smaller.
 
         Default: 80. *)
-    ; mutable verbose : int
+    ; verbose : int
     (** This value controls the GC messages on standard error output.
         It is a sum of some of the following flags, to print messages
         on the corresponding events:
@@ -239,7 +239,7 @@ module Control : sig
         - [0x200] Computation of compaction triggering condition.
 
         Default: 0. *)
-    ; mutable max_overhead : int
+    ; max_overhead : int
     (** Heap compaction is triggered when the estimated amount
         of "wasted" memory is more than [max_overhead] percent of the
         amount of live data.  If [max_overhead] is set to 0, heap
@@ -248,13 +248,13 @@ module Control : sig
         If [max_overhead >= 1000000], compaction is never triggered.
 
         Default: 500. *)
-    ; mutable stack_limit : int
+    ; stack_limit : int
     (** The maximum size of the stack (in words).  This is only
         relevant to the byte-code runtime, as the native code runtime
         uses the operating system's stack.
 
         Default: 1048576 words / 4MB (32bit) / 8MB (64bit). *)
-    ; mutable allocation_policy : int
+    ; allocation_policy : int
     (** The policy used for allocating in the heap.  Possible
         values are 0 and 1.  0 is the next-fit policy, which is
         quite fast but can result in fragmentation.  1 is the
@@ -300,11 +300,11 @@ module Control : sig
         Default: 8192 bytes.
         @since 4.08.0 *)
     }
-  [@@deriving bin_io, sexp, fields]
+    [@@deriving bin_io, sexp, fields]
 
-  [%%endif]
+    [%%endif]
 
-  include Comparable.S with type t := t
+    include Comparable.S with type t := t
 end
 
 type control = Control.t
@@ -421,84 +421,84 @@ val keep_alive : _ -> unit
     The default is Best_fit.
 *)
 module Allocation_policy : sig
-  type t =
+    type t =
     | Next_fit
     | First_fit
     | Best_fit
-  [@@deriving compare, equal, hash, sexp]
+    [@@deriving compare, equal, hash, sexp]
 end
 
 [%%if ocaml_version < (4, 08, 0)]
 
 (** Adjust the specified GC parameters. *)
 val tune
-  :  ?logger:(string -> unit)
-  -> ?minor_heap_size:int
-  -> ?major_heap_increment:int
-  -> ?space_overhead:int
-  -> ?verbose:int
-  -> ?max_overhead:int
-  -> ?stack_limit:int
-  -> ?allocation_policy:Allocation_policy.t
-  -> ?window_size:int
-  -> unit
-  -> unit
+    :  ?logger:(string -> unit)
+    -> ?minor_heap_size:int
+    -> ?major_heap_increment:int
+    -> ?space_overhead:int
+    -> ?verbose:int
+    -> ?max_overhead:int
+    -> ?stack_limit:int
+    -> ?allocation_policy:Allocation_policy.t
+    -> ?window_size:int
+    -> unit
+    -> unit
 
 [%%else]
 
 (** Adjust the specified GC parameters. *)
 val tune
-  :  ?logger:(string -> unit)
-  -> ?minor_heap_size:int
-  -> ?major_heap_increment:int
-  -> ?space_overhead:int
-  -> ?verbose:int
-  -> ?max_overhead:int
-  -> ?stack_limit:int
-  -> ?allocation_policy:Allocation_policy.t
-  -> ?window_size:int
-  -> ?custom_major_ratio:int
-  -> ?custom_minor_ratio:int
-  -> ?custom_minor_max_size:int
-  -> unit
-  -> unit
+    :  ?logger:(string -> unit)
+    -> ?minor_heap_size:int
+    -> ?major_heap_increment:int
+    -> ?space_overhead:int
+    -> ?verbose:int
+    -> ?max_overhead:int
+    -> ?stack_limit:int
+    -> ?allocation_policy:Allocation_policy.t
+    -> ?window_size:int
+    -> ?custom_major_ratio:int
+    -> ?custom_minor_ratio:int
+    -> ?custom_minor_max_size:int
+    -> unit
+    -> unit
 
 [%%endif]
 
 val disable_compaction
-  :  ?logger:(string -> unit)
-  -> allocation_policy:[ `Don't_change | `Set_to of Allocation_policy.t ]
-  -> unit
-  -> unit
+    :  ?logger:(string -> unit)
+    -> allocation_policy:[ `Don't_change | `Set_to of Allocation_policy.t ]
+    -> unit
+    -> unit
 
 module For_testing : sig
-  module Allocation_report : sig
+    module Allocation_report : sig
     type t =
-      { major_words_allocated : int
-      ; minor_words_allocated : int
-      }
-  end
+        { major_words_allocated : int
+        ; minor_words_allocated : int
+        }
+    end
 
-  (** [measure_allocation f] measures the words allocated by running [f ()] *)
-  val measure_allocation : (unit -> 'a) -> 'a * Allocation_report.t
+    (** [measure_allocation f] measures the words allocated by running [f ()] *)
+    val measure_allocation : (unit -> 'a) -> 'a * Allocation_report.t
 
-  (** [is_zero_alloc f] runs [f ()] and returns [true] if it does not allocate, or [false]
-      otherwise. [is_zero_alloc] does not allocate. *)
-  val is_zero_alloc : (unit -> _) -> bool
+    (** [is_zero_alloc f] runs [f ()] and returns [true] if it does not allocate, or [false]
+        otherwise. [is_zero_alloc] does not allocate. *)
+    val is_zero_alloc : (unit -> _) -> bool
 
-  (** [prepare_heap_to_count_minor_allocation] sets up the heap so that one can
-      subsequently measure minor allocation via:
+    (** [prepare_heap_to_count_minor_allocation] sets up the heap so that one can
+        subsequently measure minor allocation via:
 
-      {[
+        {[
         let minor_words_before = Gc.minor_words () in
         (* ... do stuff ... *)
         let minor_words_after = Gc.minor_words () in
         let minor_words_allocated = minor_words_after - minor_words_before in
-      ]}
+        ]}
 
-      Without calling [prepare_heap_to_count_minor_allocation], the resulting count may be
-      inaccurate. *)
-  val prepare_heap_to_count_minor_allocation : unit -> unit
+        Without calling [prepare_heap_to_count_minor_allocation], the resulting count may be
+        inaccurate. *)
+    val prepare_heap_to_count_minor_allocation : unit -> unit
 end
 
 (** The [Expert] module contains functions that novice users should not use, due to their
@@ -515,78 +515,78 @@ end
     perform a simple idempotent action, like setting a ref.  The same rules as for
     signal handlers apply to finalizers.  *)
 module Expert : sig
-  (** [add_finalizer b f] ensures that [f] runs after [b] becomes unreachable.  The OCaml
-      runtime only supports finalizers on heap blocks, hence [add_finalizer] requires [b :
-      _ Heap_block.t].  The runtime essentially maintains a set of finalizer pairs:
+    (** [add_finalizer b f] ensures that [f] runs after [b] becomes unreachable.  The OCaml
+        runtime only supports finalizers on heap blocks, hence [add_finalizer] requires [b :
+        _ Heap_block.t].  The runtime essentially maintains a set of finalizer pairs:
 
-      {v
+        {v
         'a Heap_block.t * ('a Heap_block.t -> unit)
-      v}
+        v}
 
-      Each call to [add_finalizer] adds a new pair to the set.  It is allowed for many
-      pairs to have the same heap block, the same function, or both.  Each pair is a
-      distinct element of the set.
+        Each call to [add_finalizer] adds a new pair to the set.  It is allowed for many
+        pairs to have the same heap block, the same function, or both.  Each pair is a
+        distinct element of the set.
 
-      After a garbage collection determines that a heap block [b] is unreachable, it
-      removes from the set of finalizers all finalizer pairs [(b, f)] whose block is [b],
-      and then and runs [f b] for all such pairs.  Thus, a finalizer registered with
-      [add_finalizer] will run at most once.
+        After a garbage collection determines that a heap block [b] is unreachable, it
+        removes from the set of finalizers all finalizer pairs [(b, f)] whose block is [b],
+        and then and runs [f b] for all such pairs.  Thus, a finalizer registered with
+        [add_finalizer] will run at most once.
 
-      The GC will call the finalisation functions in the order of deallocation.  When
-      several values become unreachable at the same time (i.e. during the same GC cycle),
-      the finalisation functions will be called in the reverse order of the corresponding
-      calls to [add_finalizer].  If [add_finalizer] is called in the same order as the
-      values are allocated, that means each value is finalised before the values it
-      depends upon.  Of course, this becomes false if additional dependencies are
-      introduced by assignments.
+        The GC will call the finalisation functions in the order of deallocation.  When
+        several values become unreachable at the same time (i.e. during the same GC cycle),
+        the finalisation functions will be called in the reverse order of the corresponding
+        calls to [add_finalizer].  If [add_finalizer] is called in the same order as the
+        values are allocated, that means each value is finalised before the values it
+        depends upon.  Of course, this becomes false if additional dependencies are
+        introduced by assignments.
 
-      In a finalizer pair [(b, f)], it is a mistake for the closure of [f] to reference
-      (directly or indirectly) [b] -- [f] should only access [b] via its argument.
-      Referring to [b] in any other way will cause [b] to be kept alive forever, since [f]
-      itself is a root of garbage collection, and can itself only be collected after the
-      pair [(b, f)] is removed from the set of finalizers.
+        In a finalizer pair [(b, f)], it is a mistake for the closure of [f] to reference
+        (directly or indirectly) [b] -- [f] should only access [b] via its argument.
+        Referring to [b] in any other way will cause [b] to be kept alive forever, since [f]
+        itself is a root of garbage collection, and can itself only be collected after the
+        pair [(b, f)] is removed from the set of finalizers.
 
-      The [f] function can use all features of OCaml, including assignments that make the
-      value reachable again.  It can also loop forever (in this case, the other
-      finalisation functions will be called during the execution of f).  It can call
-      [add_finalizer] on [v] or other values to register other functions or even itself.
+        The [f] function can use all features of OCaml, including assignments that make the
+        value reachable again.  It can also loop forever (in this case, the other
+        finalisation functions will be called during the execution of f).  It can call
+        [add_finalizer] on [v] or other values to register other functions or even itself.
 
-      All finalizers are called with [Exn.handle_uncaught_and_exit], to prevent the
-      finalizer from raising, because raising from a finalizer could raise to any
-      allocation or GC point in any thread, which would be impossible to reason about.
+        All finalizers are called with [Exn.handle_uncaught_and_exit], to prevent the
+        finalizer from raising, because raising from a finalizer could raise to any
+        allocation or GC point in any thread, which would be impossible to reason about.
 
-      [add_finalizer_exn b f] is like [add_finalizer], but will raise if [b] is not a heap
-      block.
-  *)
-  val add_finalizer : 'a Heap_block.t -> ('a Heap_block.t -> unit) -> unit
+        [add_finalizer_exn b f] is like [add_finalizer], but will raise if [b] is not a heap
+        block.
+    *)
+    val add_finalizer : 'a Heap_block.t -> ('a Heap_block.t -> unit) -> unit
 
-  val add_finalizer_exn : 'a -> ('a -> unit) -> unit
+    val add_finalizer_exn : 'a -> ('a -> unit) -> unit
 
-  (** Same as {!add_finalizer} except that the function is not called until the value has
-      become unreachable for the last time.  This means that the finalization function
-      does not recieve the value as an argument.  Every weak pointer and ephemeron that
-      contained this value as key or data is unset before running the finalization
-      function. *)
-  val add_finalizer_last : 'a Heap_block.t -> (unit -> unit) -> unit
+    (** Same as {!add_finalizer} except that the function is not called until the value has
+        become unreachable for the last time.  This means that the finalization function
+        does not recieve the value as an argument.  Every weak pointer and ephemeron that
+        contained this value as key or data is unset before running the finalization
+        function. *)
+    val add_finalizer_last : 'a Heap_block.t -> (unit -> unit) -> unit
 
-  val add_finalizer_last_exn : 'a -> (unit -> unit) -> unit
+    val add_finalizer_last_exn : 'a -> (unit -> unit) -> unit
 
-  (** The runtime essentially maintains a bool ref:
+    (** The runtime essentially maintains a bool ref:
 
-      {[
+        {[
         val finalizer_is_running : bool ref
-      ]}
+        ]}
 
-      The runtime uses this bool ref to ensure that only one finalizer is running at a
-      time, by setting it to [true] when a finalizer starts and setting it to [false] when
-      a finalizer finishes.  The runtime will not start running a finalizer if
-      [!finalizer_is_running = true].  Calling [finalize_release] essentially does
-      [finalizer_is_running := false], which allows another finalizer to start whether
-      or not the current finalizer finishes. *)
-  val finalize_release : unit -> unit
+        The runtime uses this bool ref to ensure that only one finalizer is running at a
+        time, by setting it to [true] when a finalizer starts and setting it to [false] when
+        a finalizer finishes.  The runtime will not start running a finalizer if
+        [!finalizer_is_running = true].  Calling [finalize_release] essentially does
+        [finalizer_is_running := false], which allows another finalizer to start whether
+        or not the current finalizer finishes. *)
+    val finalize_release : unit -> unit
 
-  (** A GC alarm calls a user function at the end of each major GC cycle. *)
-  module Alarm : sig
+    (** A GC alarm calls a user function at the end of each major GC cycle. *)
+    module Alarm : sig
     type t [@@deriving sexp_of]
 
     (** [create f] arranges for [f] to be called at the end of each major GC cycle,
@@ -600,14 +600,13 @@ module Expert : sig
     (** [delete t] will stop the calls to the function associated to [t].  Calling [delete
         t] again has no effect. *)
     val delete : t -> unit
-  end
+    end
 end
 
 module Stable : sig
-  module Allocation_policy : sig
+    module Allocation_policy : sig
     module V1 : sig
-      type nonrec t = Allocation_policy.t [@@deriving bin_io, compare, equal, hash, sexp]
+        type nonrec t = Allocation_policy.t [@@deriving bin_io, compare, equal, hash, sexp]
     end
-  end
+    end
 end
-
